@@ -30,6 +30,24 @@ The build has 3 steps:
 
 We do not use the configure or build scripts from Bitcoin Core.
 
+## Running
+
+Using a runtime that supports WASI (such as [wasmtime](https://wasmtime.dev/)), pass a raw (not hex-encoded) Bitcoin block on stdin:
+
+```
+❭ wasmtime --allow-unknown-exports result/bitcoin-verify.wasm < 00000000000000000003c850bd2c8d880d4ed4f71ce811d48179b84a4cc09138.raw
+❭ echo $?
+0
+```
+
+A non-zero exit code represents an error or invalid block:
+
+```
+❭ echo "this is not a Bitcoin block" | wasmtime --allow-unknown-exports result/bitcoin-verify.wasm
+❭ echo $?
+1
+```
+
 ## Patching Methodology
 
 The Wasm compiler used (Clang 12) does not support the following features used by Bitcoin Core:
