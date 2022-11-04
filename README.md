@@ -35,7 +35,7 @@ We do not use the configure or build scripts from Bitcoin Core.
 Using a runtime that supports WASI (such as [wasmtime](https://wasmtime.dev/)), pass a raw (not hex-encoded) Bitcoin block on stdin:
 
 ```
-❭ wasmtime --allow-unknown-exports result/bitcoin-verify.wasm < 00000000000000000003c850bd2c8d880d4ed4f71ce811d48179b84a4cc09138.raw
+❭ wasmtime result/bitcoin-verify.wasm < 00000000000000000003c850bd2c8d880d4ed4f71ce811d48179b84a4cc09138.raw
 ❭ echo $?
 0
 ```

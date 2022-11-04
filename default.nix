@@ -44,7 +44,7 @@ in llvmPackages.stdenv.mkDerivation {
     llvmPackages.libcxx
   ];
   buildPhase = ''
-    $CXX --std=c++17 -O1 -o bitcoin-verify.wasm bitcoin-verify.cpp ${builtins.concatStringsSep " " (map (f: "${bitcoin-wasm}/src/${f}.cpp") required-cpp-files)} -I${bitcoin-wasm}/src -Wl,--no-entry -Wl,--export-all -Wl,--strip-all
+    $CXX --std=c++17 -O1 -o bitcoin-verify.wasm bitcoin-verify.cpp ${builtins.concatStringsSep " " (map (f: "${bitcoin-wasm}/src/${f}.cpp") required-cpp-files)} -I${bitcoin-wasm}/src -Wl,--no-entry -Wl,--strip-all
   '';
   installPhase = ''
     mkdir $out
