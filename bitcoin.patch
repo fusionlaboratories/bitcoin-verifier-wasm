@@ -1,6 +1,7 @@
+Only in new: .bash_history
 diff -u -r old/src/arith_uint256.cpp new/src/arith_uint256.cpp
 --- old/src/arith_uint256.cpp	1970-01-01 01:00:01.000000000 +0100
-+++ new/src/arith_uint256.cpp	2022-10-30 22:20:31.271451338 +0100
++++ new/src/arith_uint256.cpp	2023-01-16 12:56:43.793081734 +0100
 @@ -88,7 +88,7 @@
      int num_bits = num.bits();
      int div_bits = div.bits();
@@ -96,7 +97,7 @@ diff -u -r old/src/chainparamsbase.cpp new/src/chainparamsbase.cpp
  }
 diff -u -r old/src/chainparams.cpp new/src/chainparams.cpp
 --- old/src/chainparams.cpp	1970-01-01 01:00:01.000000000 +0100
-+++ new/src/chainparams.cpp	2022-10-30 23:16:18.502820875 +0100
++++ new/src/chainparams.cpp	2023-01-16 17:02:55.993738641 +0100
 @@ -9,13 +9,9 @@
  #include <consensus/merkle.h>
  #include <deploymentinfo.h>
@@ -111,7 +112,177 @@ diff -u -r old/src/chainparams.cpp new/src/chainparams.cpp
  static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
  {
      CMutableTransaction txNew;
-@@ -269,293 +265,6 @@
+@@ -108,10 +104,10 @@
+         m_assumed_blockchain_size = 460;
+         m_assumed_chain_state_size = 6;
+ 
+-        genesis = CreateGenesisBlock(1231006505, 2083236893, 0x1d00ffff, 1, 50 * COIN);
+-        consensus.hashGenesisBlock = genesis.GetHash();
+-        assert(consensus.hashGenesisBlock == uint256S("0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
+-        assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
++        // genesis = CreateGenesisBlock(1231006505, 2083236893, 0x1d00ffff, 1, 50 * COIN);
++        // consensus.hashGenesisBlock = genesis.GetHash();
++        // assert(consensus.hashGenesisBlock == uint256S("0x000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"));
++        // assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+ 
+         // Note that of those which support the service bits prefix, most only support a subset of
+         // possible options.
+@@ -136,449 +132,38 @@
+ 
+         bech32_hrp = "bc";
+ 
+-        vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_main), std::end(chainparams_seed_main));
++        // vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_main), std::end(chainparams_seed_main));
+ 
+         fDefaultConsistencyChecks = false;
+         fRequireStandard = true;
+         m_is_test_chain = false;
+         m_is_mockable_chain = false;
+ 
+-        checkpointData = {
+-            {
+-                { 11111, uint256S("0x0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d")},
+-                { 33333, uint256S("0x000000002dd5588a74784eaa7ab0507a18ad16a236e7b1ce69f00d7ddfb5d0a6")},
+-                { 74000, uint256S("0x0000000000573993a3c9e41ce34471c079dcf5f52a0e824a81e7f953b8661a20")},
+-                {105000, uint256S("0x00000000000291ce28027faea320c8d2b054b2e0fe44a773f3eefb151d6bdc97")},
+-                {134444, uint256S("0x00000000000005b12ffd4cd315cd34ffd4a594f430ac814c91184a0d42d2b0fe")},
+-                {168000, uint256S("0x000000000000099e61ea72015e79632f216fe6cb33d7899acb35b75c8303b763")},
+-                {193000, uint256S("0x000000000000059f452a5f7340de6682a977387c17010ff6e6c3bd83ca8b1317")},
+-                {210000, uint256S("0x000000000000048b95347e83192f69cf0366076336c639f9b7228e9ba171342e")},
+-                {216116, uint256S("0x00000000000001b4f4b433e81ee46494af945cf96014816a4e2370f11b23df4e")},
+-                {225430, uint256S("0x00000000000001c108384350f74090433e7fcf79a606b8e797f065b130575932")},
+-                {250000, uint256S("0x000000000000003887df1f29024b06fc2200b55f8af8f35453d7be294df2d214")},
+-                {279000, uint256S("0x0000000000000001ae8c72a0b0c301f67e3afca10e819efa9041e458e9bd7e40")},
+-                {295000, uint256S("0x00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983")},
+-            }
+-        };
+-
+-        m_assumeutxo_data = MapAssumeutxo{
+-         // TODO to be specified in a future patch.
+-        };
+-
+-        chainTxData = ChainTxData{
+-            // Data from RPC: getchaintxstats 4096 000000000000000000052d314a259755ca65944e68df6b12a067ea8f1f5a7091
+-            /* nTime    */ 1645542140,
+-            /* nTxCount */ 712531200,
+-            /* dTxRate  */ 2.891036496010309,
+-        };
+-    }
+-};
+-
+-/**
+- * Testnet (v3): public test network which is reset from time to time.
+- */
+-class CTestNetParams : public CChainParams {
+-public:
+-    CTestNetParams() {
+-        strNetworkID = CBaseChainParams::TESTNET;
+-        consensus.signet_blocks = false;
+-        consensus.signet_challenge.clear();
+-        consensus.nSubsidyHalvingInterval = 210000;
+-        consensus.BIP16Exception = uint256S("0x00000000dd30457c001f4095d208cc1296b0eed002427aa599874af7a432b105");
+-        consensus.BIP34Height = 21111;
+-        consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
+-        consensus.BIP65Height = 581885; // 00000000007f6655f22f98e72ed80d8b06dc761d5da09df0fa1dc4be4f861eb6
+-        consensus.BIP66Height = 330776; // 000000002104c8c45e99a8853285a3b592602a3ccde2b832481da85e9e4ba182
+-        consensus.CSVHeight = 770112; // 00000000025e930139bac5c6c31a403776da130831ab85be56578f3fa75369bb
+-        consensus.SegwitHeight = 834624; // 00000000002b980fcd729daaa248fd9316a5200e9b367f4ff2c42453e84201ca
+-        consensus.MinBIP9WarningHeight = 836640; // segwit activation height + miner confirmation window
+-        consensus.powLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+-        consensus.nPowTargetTimespan = 14 * 24 * 60 * 60; // two weeks
+-        consensus.nPowTargetSpacing = 10 * 60;
+-        consensus.fPowAllowMinDifficultyBlocks = true;
+-        consensus.fPowNoRetargeting = false;
+-        consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
+-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
+-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
+-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
+-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
+-
+-        // Deployment of Taproot (BIPs 340-342)
+-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].bit = 2;
+-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nStartTime = 1619222400; // April 24th, 2021
+-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].nTimeout = 1628640000; // August 11th, 2021
+-        consensus.vDeployments[Consensus::DEPLOYMENT_TAPROOT].min_activation_height = 0; // No activation delay
+-
+-        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000064728c7be6fe4b2f961");
+-        consensus.defaultAssumeValid = uint256S("0x00000000000163cfb1f97c4e4098a3692c8053ad9cab5ad9c86b338b5c00b8b7"); // 2143398
+-
+-        pchMessageStart[0] = 0x0b;
+-        pchMessageStart[1] = 0x11;
+-        pchMessageStart[2] = 0x09;
+-        pchMessageStart[3] = 0x07;
+-        nDefaultPort = 18333;
+-        nPruneAfterHeight = 1000;
+-        m_assumed_blockchain_size = 40;
+-        m_assumed_chain_state_size = 2;
+-
+-        genesis = CreateGenesisBlock(1296688602, 414098458, 0x1d00ffff, 1, 50 * COIN);
+-        consensus.hashGenesisBlock = genesis.GetHash();
+-        assert(consensus.hashGenesisBlock == uint256S("0x000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"));
+-        assert(genesis.hashMerkleRoot == uint256S("0x4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"));
+-
+-        vFixedSeeds.clear();
+-        vSeeds.clear();
+-        // nodes with support for servicebits filtering should be at the top
+-        vSeeds.emplace_back("testnet-seed.bitcoin.jonasschnelli.ch.");
+-        vSeeds.emplace_back("seed.tbtc.petertodd.org.");
+-        vSeeds.emplace_back("seed.testnet.bitcoin.sprovoost.nl.");
+-        vSeeds.emplace_back("testnet-seed.bluematt.me."); // Just a static list of stable node(s), only supports x9
+-
+-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
+-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
+-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
+-        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
+-        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
+-
+-        bech32_hrp = "tb";
+-
+-        vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_test), std::end(chainparams_seed_test));
+-
+-        fDefaultConsistencyChecks = false;
+-        fRequireStandard = false;
+-        m_is_test_chain = true;
+-        m_is_mockable_chain = false;
+-
+-        checkpointData = {
+-            {
+-                {546, uint256S("000000002a936ca763904c3c35fce2f3556c559c0214345d31b1bcebf76acb70")},
+-            }
+-        };
+-
+-        m_assumeutxo_data = MapAssumeutxo{
+-            // TODO to be specified in a future patch.
+-        };
+-
+-        chainTxData = ChainTxData{
+-            // Data from RPC: getchaintxstats 4096 00000000d18cfe81cbeea665076807789bd8f831d557632e635bc6e3c003069e
+-            /* nTime    */ 1645635119,
+-            /* nTxCount */ 62226341,
+-            /* dTxRate  */ 0.07717997442177152,
+-        };
++        // checkpointData = {
++        //     {
++        //         { 11111, uint256S("0x0000000069e244f73d78e8fd29ba2fd2ed618bd6fa2ee92559f542fdb26e7c1d")},
++        //         { 33333, uint256S("0x000000002dd5588a74784eaa7ab0507a18ad16a236e7b1ce69f00d7ddfb5d0a6")},
++        //         { 74000, uint256S("0x0000000000573993a3c9e41ce34471c079dcf5f52a0e824a81e7f953b8661a20")},
++        //         {105000, uint256S("0x00000000000291ce28027faea320c8d2b054b2e0fe44a773f3eefb151d6bdc97")},
++        //         {134444, uint256S("0x00000000000005b12ffd4cd315cd34ffd4a594f430ac814c91184a0d42d2b0fe")},
++        //         {168000, uint256S("0x000000000000099e61ea72015e79632f216fe6cb33d7899acb35b75c8303b763")},
++        //         {193000, uint256S("0x000000000000059f452a5f7340de6682a977387c17010ff6e6c3bd83ca8b1317")},
++        //         {210000, uint256S("0x000000000000048b95347e83192f69cf0366076336c639f9b7228e9ba171342e")},
++        //         {216116, uint256S("0x00000000000001b4f4b433e81ee46494af945cf96014816a4e2370f11b23df4e")},
++        //         {225430, uint256S("0x00000000000001c108384350f74090433e7fcf79a606b8e797f065b130575932")},
++        //         {250000, uint256S("0x000000000000003887df1f29024b06fc2200b55f8af8f35453d7be294df2d214")},
++        //         {279000, uint256S("0x0000000000000001ae8c72a0b0c301f67e3afca10e819efa9041e458e9bd7e40")},
++        //         {295000, uint256S("0x00000000000000004d9b4ef50f0f9d686fd69db2e03af35a100370c64632a983")},
++        //     }
++        // };
++
++        // m_assumeutxo_data = MapAssumeutxo{
++        //  // TODO to be specified in a future patch.
++        // };
      }
  };
  
@@ -402,16 +573,15 @@ diff -u -r old/src/chainparams.cpp new/src/chainparams.cpp
 -    }
 -}
 -
- static std::unique_ptr<const CChainParams> globalChainParams;
- 
- const CChainParams &Params() {
-@@ -563,22 +272,12 @@
-     return *globalChainParams;
- }
- 
+-static std::unique_ptr<const CChainParams> globalChainParams;
+-
+-const CChainParams &Params() {
+-    assert(globalChainParams);
+-    return *globalChainParams;
+-}
+-
 -std::unique_ptr<const CChainParams> CreateChainParams(const ArgsManager& args, const std::string& chain)
-+std::unique_ptr<const CChainParams> CreateMainChainParams()
- {
+-{
 -    if (chain == CBaseChainParams::MAIN) {
 -        return std::unique_ptr<CChainParams>(new CMainParams());
 -    } else if (chain == CBaseChainParams::TESTNET) {
@@ -422,28 +592,76 @@ diff -u -r old/src/chainparams.cpp new/src/chainparams.cpp
 -        return std::unique_ptr<CChainParams>(new CRegTestParams(args));
 -    }
 -    throw std::runtime_error(strprintf("%s: Unknown chain %s.", __func__, chain));
-+    return std::unique_ptr<CChainParams>(new CMainParams());
- }
- 
+-}
+-
 -void SelectParams(const std::string& network)
-+std::unique_ptr<const CChainParams> CreateChainParams(const ArgsManager& args, const std::string& chain)
++std::unique_ptr<const CChainParams> CreateMainChainParams()
  {
 -    SelectBaseParams(network);
 -    globalChainParams = CreateChainParams(gArgs, network);
-+  return std::unique_ptr<CChainParams>(new CMainParams());
++    return std::unique_ptr<CChainParams>(new CMainParams());
  }
 diff -u -r old/src/chainparams.h new/src/chainparams.h
 --- old/src/chainparams.h	1970-01-01 01:00:01.000000000 +0100
-+++ new/src/chainparams.h	2022-10-28 00:07:54.881625332 +0200
-@@ -153,6 +153,8 @@
-  */
- std::unique_ptr<const CChainParams> CreateChainParams(const ArgsManager& args, const std::string& chain);
++++ new/src/chainparams.h	2023-01-16 17:03:03.369729144 +0100
+@@ -92,8 +92,8 @@
+         return a.SetSpecial(addr) ? GetDefaultPort(a.GetNetwork()) : GetDefaultPort();
+     }
  
+-    const CBlock& GenesisBlock() const { return genesis; }
+-    /** Default value for -checkmempool and -checkblockindex argument */
++    // const CBlock& GenesisBlock() const { return genesis; }
++    // /** Default value for -checkmempool and -checkblockindex argument */
+     bool DefaultConsistencyChecks() const { return fDefaultConsistencyChecks; }
+     /** Policy: Filter transactions that do not match well-defined patterns */
+     bool RequireStandard() const { return fRequireStandard; }
+@@ -115,13 +115,13 @@
+     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
+     const std::string& Bech32HRP() const { return bech32_hrp; }
+     const std::vector<uint8_t>& FixedSeeds() const { return vFixedSeeds; }
+-    const CCheckpointData& Checkpoints() const { return checkpointData; }
++    // const CCheckpointData& Checkpoints() const { return checkpointData; }
+ 
+-    //! Get allowed assumeutxo configuration.
+-    //! @see ChainstateManager
+-    const MapAssumeutxo& Assumeutxo() const { return m_assumeutxo_data; }
++    // //! Get allowed assumeutxo configuration.
++    // //! @see ChainstateManager
++    // const MapAssumeutxo& Assumeutxo() const { return m_assumeutxo_data; }
+ 
+-    const ChainTxData& TxData() const { return chainTxData; }
++    // const ChainTxData& TxData() const { return chainTxData; }
+ protected:
+     CChainParams() {}
+ 
+@@ -135,23 +135,17 @@
+     std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
+     std::string bech32_hrp;
+     std::string strNetworkID;
+-    CBlock genesis;
++    // CBlock genesis;
+     std::vector<uint8_t> vFixedSeeds;
+     bool fDefaultConsistencyChecks;
+     bool fRequireStandard;
+     bool m_is_test_chain;
+     bool m_is_mockable_chain;
+-    CCheckpointData checkpointData;
+-    MapAssumeutxo m_assumeutxo_data;
+-    ChainTxData chainTxData;
++    // CCheckpointData checkpointData;
++    // MapAssumeutxo m_assumeutxo_data;
+ };
+ 
+-/**
+- * Creates and returns a std::unique_ptr<CChainParams> of the chosen chain.
+- * @returns a CChainParams* of the chosen chain.
+- * @throws a std::runtime_error if the chain is not supported.
+- */
+-std::unique_ptr<const CChainParams> CreateChainParams(const ArgsManager& args, const std::string& chain);
 +std::unique_ptr<const CChainParams> CreateMainChainParams();
-+
+ 
  /**
   * Return the currently selected parameters. This won't change after app
-  * startup, except for unit tests.
 diff -u -r old/src/coins.h new/src/coins.h
 --- old/src/coins.h	1970-01-01 01:00:01.000000000 +0100
 +++ new/src/coins.h	2022-10-30 21:38:42.405495175 +0100
@@ -671,7 +889,7 @@ diff -u -r old/src/netaddress.h new/src/netaddress.h
          m_scope_id = 0;
 diff -u -r old/src/pow.cpp new/src/pow.cpp
 --- old/src/pow.cpp	1970-01-01 01:00:01.000000000 +0100
-+++ new/src/pow.cpp	2022-10-30 23:19:25.689528572 +0100
++++ new/src/pow.cpp	2023-01-12 21:24:09.025503434 +0100
 @@ -10,42 +10,6 @@
  #include <primitives/block.h>
  #include <uint256.h>
@@ -715,6 +933,515 @@ diff -u -r old/src/pow.cpp new/src/pow.cpp
  unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
  {
      if (params.fPowNoRetargeting)
+diff -u -r old/src/prevector.h new/src/prevector.h
+--- old/src/prevector.h	1970-01-01 01:00:01.000000000 +0100
++++ new/src/prevector.h	2023-01-10 21:07:28.897516004 +0100
+@@ -34,504 +34,6 @@
+  *  move constructors can be used instead.
+  */
+ template<unsigned int N, typename T, typename Size = uint32_t, typename Diff = int32_t>
+-class prevector {
+-public:
+-    typedef Size size_type;
+-    typedef Diff difference_type;
+-    typedef T value_type;
+-    typedef value_type& reference;
+-    typedef const value_type& const_reference;
+-    typedef value_type* pointer;
+-    typedef const value_type* const_pointer;
+-
+-    class iterator {
+-        T* ptr;
+-    public:
+-        typedef Diff difference_type;
+-        typedef T value_type;
+-        typedef T* pointer;
+-        typedef T& reference;
+-        typedef std::random_access_iterator_tag iterator_category;
+-        iterator(T* ptr_) : ptr(ptr_) {}
+-        T& operator*() const { return *ptr; }
+-        T* operator->() const { return ptr; }
+-        T& operator[](size_type pos) { return ptr[pos]; }
+-        const T& operator[](size_type pos) const { return ptr[pos]; }
+-        iterator& operator++() { ptr++; return *this; }
+-        iterator& operator--() { ptr--; return *this; }
+-        iterator operator++(int) { iterator copy(*this); ++(*this); return copy; }
+-        iterator operator--(int) { iterator copy(*this); --(*this); return copy; }
+-        difference_type friend operator-(iterator a, iterator b) { return (&(*a) - &(*b)); }
+-        iterator operator+(size_type n) { return iterator(ptr + n); }
+-        iterator& operator+=(size_type n) { ptr += n; return *this; }
+-        iterator operator-(size_type n) { return iterator(ptr - n); }
+-        iterator& operator-=(size_type n) { ptr -= n; return *this; }
+-        bool operator==(iterator x) const { return ptr == x.ptr; }
+-        bool operator!=(iterator x) const { return ptr != x.ptr; }
+-        bool operator>=(iterator x) const { return ptr >= x.ptr; }
+-        bool operator<=(iterator x) const { return ptr <= x.ptr; }
+-        bool operator>(iterator x) const { return ptr > x.ptr; }
+-        bool operator<(iterator x) const { return ptr < x.ptr; }
+-    };
+-
+-    class reverse_iterator {
+-        T* ptr;
+-    public:
+-        typedef Diff difference_type;
+-        typedef T value_type;
+-        typedef T* pointer;
+-        typedef T& reference;
+-        typedef std::bidirectional_iterator_tag iterator_category;
+-        reverse_iterator(T* ptr_) : ptr(ptr_) {}
+-        T& operator*() { return *ptr; }
+-        const T& operator*() const { return *ptr; }
+-        T* operator->() { return ptr; }
+-        const T* operator->() const { return ptr; }
+-        reverse_iterator& operator--() { ptr++; return *this; }
+-        reverse_iterator& operator++() { ptr--; return *this; }
+-        reverse_iterator operator++(int) { reverse_iterator copy(*this); ++(*this); return copy; }
+-        reverse_iterator operator--(int) { reverse_iterator copy(*this); --(*this); return copy; }
+-        bool operator==(reverse_iterator x) const { return ptr == x.ptr; }
+-        bool operator!=(reverse_iterator x) const { return ptr != x.ptr; }
+-    };
+-
+-    class const_iterator {
+-        const T* ptr;
+-    public:
+-        typedef Diff difference_type;
+-        typedef const T value_type;
+-        typedef const T* pointer;
+-        typedef const T& reference;
+-        typedef std::random_access_iterator_tag iterator_category;
+-        const_iterator(const T* ptr_) : ptr(ptr_) {}
+-        const_iterator(iterator x) : ptr(&(*x)) {}
+-        const T& operator*() const { return *ptr; }
+-        const T* operator->() const { return ptr; }
+-        const T& operator[](size_type pos) const { return ptr[pos]; }
+-        const_iterator& operator++() { ptr++; return *this; }
+-        const_iterator& operator--() { ptr--; return *this; }
+-        const_iterator operator++(int) { const_iterator copy(*this); ++(*this); return copy; }
+-        const_iterator operator--(int) { const_iterator copy(*this); --(*this); return copy; }
+-        difference_type friend operator-(const_iterator a, const_iterator b) { return (&(*a) - &(*b)); }
+-        const_iterator operator+(size_type n) { return const_iterator(ptr + n); }
+-        const_iterator& operator+=(size_type n) { ptr += n; return *this; }
+-        const_iterator operator-(size_type n) { return const_iterator(ptr - n); }
+-        const_iterator& operator-=(size_type n) { ptr -= n; return *this; }
+-        bool operator==(const_iterator x) const { return ptr == x.ptr; }
+-        bool operator!=(const_iterator x) const { return ptr != x.ptr; }
+-        bool operator>=(const_iterator x) const { return ptr >= x.ptr; }
+-        bool operator<=(const_iterator x) const { return ptr <= x.ptr; }
+-        bool operator>(const_iterator x) const { return ptr > x.ptr; }
+-        bool operator<(const_iterator x) const { return ptr < x.ptr; }
+-    };
+-
+-    class const_reverse_iterator {
+-        const T* ptr;
+-    public:
+-        typedef Diff difference_type;
+-        typedef const T value_type;
+-        typedef const T* pointer;
+-        typedef const T& reference;
+-        typedef std::bidirectional_iterator_tag iterator_category;
+-        const_reverse_iterator(const T* ptr_) : ptr(ptr_) {}
+-        const_reverse_iterator(reverse_iterator x) : ptr(&(*x)) {}
+-        const T& operator*() const { return *ptr; }
+-        const T* operator->() const { return ptr; }
+-        const_reverse_iterator& operator--() { ptr++; return *this; }
+-        const_reverse_iterator& operator++() { ptr--; return *this; }
+-        const_reverse_iterator operator++(int) { const_reverse_iterator copy(*this); ++(*this); return copy; }
+-        const_reverse_iterator operator--(int) { const_reverse_iterator copy(*this); --(*this); return copy; }
+-        bool operator==(const_reverse_iterator x) const { return ptr == x.ptr; }
+-        bool operator!=(const_reverse_iterator x) const { return ptr != x.ptr; }
+-    };
+-
+-private:
+-#pragma pack(push, 1)
+-    union direct_or_indirect {
+-        char direct[sizeof(T) * N];
+-        struct {
+-            char* indirect;
+-            size_type capacity;
+-        } indirect_contents;
+-    };
+-#pragma pack(pop)
+-    alignas(char*) direct_or_indirect _union = {};
+-    size_type _size = 0;
+-
+-    static_assert(alignof(char*) % alignof(size_type) == 0 && sizeof(char*) % alignof(size_type) == 0, "size_type cannot have more restrictive alignment requirement than pointer");
+-    static_assert(alignof(char*) % alignof(T) == 0, "value_type T cannot have more restrictive alignment requirement than pointer");
+-
+-    T* direct_ptr(difference_type pos) { return reinterpret_cast<T*>(_union.direct) + pos; }
+-    const T* direct_ptr(difference_type pos) const { return reinterpret_cast<const T*>(_union.direct) + pos; }
+-    T* indirect_ptr(difference_type pos) { return reinterpret_cast<T*>(_union.indirect_contents.indirect) + pos; }
+-    const T* indirect_ptr(difference_type pos) const { return reinterpret_cast<const T*>(_union.indirect_contents.indirect) + pos; }
+-    bool is_direct() const { return _size <= N; }
+-
+-    void change_capacity(size_type new_capacity) {
+-        if (new_capacity <= N) {
+-            if (!is_direct()) {
+-                T* indirect = indirect_ptr(0);
+-                T* src = indirect;
+-                T* dst = direct_ptr(0);
+-                memcpy(dst, src, size() * sizeof(T));
+-                free(indirect);
+-                _size -= N + 1;
+-            }
+-        } else {
+-            if (!is_direct()) {
+-                /* FIXME: Because malloc/realloc here won't call new_handler if allocation fails, assert
+-                    success. These should instead use an allocator or new/delete so that handlers
+-                    are called as necessary, but performance would be slightly degraded by doing so. */
+-                _union.indirect_contents.indirect = static_cast<char*>(realloc(_union.indirect_contents.indirect, ((size_t)sizeof(T)) * new_capacity));
+-                assert(_union.indirect_contents.indirect);
+-                _union.indirect_contents.capacity = new_capacity;
+-            } else {
+-                char* new_indirect = static_cast<char*>(malloc(((size_t)sizeof(T)) * new_capacity));
+-                assert(new_indirect);
+-                T* src = direct_ptr(0);
+-                T* dst = reinterpret_cast<T*>(new_indirect);
+-                memcpy(dst, src, size() * sizeof(T));
+-                _union.indirect_contents.indirect = new_indirect;
+-                _union.indirect_contents.capacity = new_capacity;
+-                _size += N + 1;
+-            }
+-        }
+-    }
+-
+-    T* item_ptr(difference_type pos) { return is_direct() ? direct_ptr(pos) : indirect_ptr(pos); }
+-    const T* item_ptr(difference_type pos) const { return is_direct() ? direct_ptr(pos) : indirect_ptr(pos); }
+-
+-    void fill(T* dst, ptrdiff_t count, const T& value = T{}) {
+-        std::fill_n(dst, count, value);
+-    }
+-
+-    template<typename InputIterator>
+-    void fill(T* dst, InputIterator first, InputIterator last) {
+-        while (first != last) {
+-            new(static_cast<void*>(dst)) T(*first);
+-            ++dst;
+-            ++first;
+-        }
+-    }
+-
+-public:
+-    void assign(size_type n, const T& val) {
+-        clear();
+-        if (capacity() < n) {
+-            change_capacity(n);
+-        }
+-        _size += n;
+-        fill(item_ptr(0), n, val);
+-    }
+-
+-    template<typename InputIterator>
+-    void assign(InputIterator first, InputIterator last) {
+-        size_type n = last - first;
+-        clear();
+-        if (capacity() < n) {
+-            change_capacity(n);
+-        }
+-        _size += n;
+-        fill(item_ptr(0), first, last);
+-    }
+-
+-    prevector() {}
+-
+-    explicit prevector(size_type n) {
+-        resize(n);
+-    }
+-
+-    explicit prevector(size_type n, const T& val) {
+-        change_capacity(n);
+-        _size += n;
+-        fill(item_ptr(0), n, val);
+-    }
+-
+-    template<typename InputIterator>
+-    prevector(InputIterator first, InputIterator last) {
+-        size_type n = last - first;
+-        change_capacity(n);
+-        _size += n;
+-        fill(item_ptr(0), first, last);
+-    }
+-
+-    prevector(const prevector<N, T, Size, Diff>& other) {
+-        size_type n = other.size();
+-        change_capacity(n);
+-        _size += n;
+-        fill(item_ptr(0), other.begin(),  other.end());
+-    }
+-
+-    prevector(prevector<N, T, Size, Diff>&& other) {
+-        swap(other);
+-    }
+-
+-    prevector& operator=(const prevector<N, T, Size, Diff>& other) {
+-        if (&other == this) {
+-            return *this;
+-        }
+-        assign(other.begin(), other.end());
+-        return *this;
+-    }
+-
+-    prevector& operator=(prevector<N, T, Size, Diff>&& other) {
+-        swap(other);
+-        return *this;
+-    }
+-
+-    size_type size() const {
+-        return is_direct() ? _size : _size - N - 1;
+-    }
+-
+-    bool empty() const {
+-        return size() == 0;
+-    }
+-
+-    iterator begin() { return iterator(item_ptr(0)); }
+-    const_iterator begin() const { return const_iterator(item_ptr(0)); }
+-    iterator end() { return iterator(item_ptr(size())); }
+-    const_iterator end() const { return const_iterator(item_ptr(size())); }
+-
+-    reverse_iterator rbegin() { return reverse_iterator(item_ptr(size() - 1)); }
+-    const_reverse_iterator rbegin() const { return const_reverse_iterator(item_ptr(size() - 1)); }
+-    reverse_iterator rend() { return reverse_iterator(item_ptr(-1)); }
+-    const_reverse_iterator rend() const { return const_reverse_iterator(item_ptr(-1)); }
+-
+-    size_t capacity() const {
+-        if (is_direct()) {
+-            return N;
+-        } else {
+-            return _union.indirect_contents.capacity;
+-        }
+-    }
+-
+-    T& operator[](size_type pos) {
+-        return *item_ptr(pos);
+-    }
+-
+-    const T& operator[](size_type pos) const {
+-        return *item_ptr(pos);
+-    }
+-
+-    void resize(size_type new_size) {
+-        size_type cur_size = size();
+-        if (cur_size == new_size) {
+-            return;
+-        }
+-        if (cur_size > new_size) {
+-            erase(item_ptr(new_size), end());
+-            return;
+-        }
+-        if (new_size > capacity()) {
+-            change_capacity(new_size);
+-        }
+-        ptrdiff_t increase = new_size - cur_size;
+-        fill(item_ptr(cur_size), increase);
+-        _size += increase;
+-    }
+-
+-    void reserve(size_type new_capacity) {
+-        if (new_capacity > capacity()) {
+-            change_capacity(new_capacity);
+-        }
+-    }
+-
+-    void shrink_to_fit() {
+-        change_capacity(size());
+-    }
+-
+-    void clear() {
+-        resize(0);
+-    }
+-
+-    iterator insert(iterator pos, const T& value) {
+-        size_type p = pos - begin();
+-        size_type new_size = size() + 1;
+-        if (capacity() < new_size) {
+-            change_capacity(new_size + (new_size >> 1));
+-        }
+-        T* ptr = item_ptr(p);
+-        memmove(ptr + 1, ptr, (size() - p) * sizeof(T));
+-        _size++;
+-        new(static_cast<void*>(ptr)) T(value);
+-        return iterator(ptr);
+-    }
+-
+-    void insert(iterator pos, size_type count, const T& value) {
+-        size_type p = pos - begin();
+-        size_type new_size = size() + count;
+-        if (capacity() < new_size) {
+-            change_capacity(new_size + (new_size >> 1));
+-        }
+-        T* ptr = item_ptr(p);
+-        memmove(ptr + count, ptr, (size() - p) * sizeof(T));
+-        _size += count;
+-        fill(item_ptr(p), count, value);
+-    }
+-
+-    template<typename InputIterator>
+-    void insert(iterator pos, InputIterator first, InputIterator last) {
+-        size_type p = pos - begin();
+-        difference_type count = last - first;
+-        size_type new_size = size() + count;
+-        if (capacity() < new_size) {
+-            change_capacity(new_size + (new_size >> 1));
+-        }
+-        T* ptr = item_ptr(p);
+-        memmove(ptr + count, ptr, (size() - p) * sizeof(T));
+-        _size += count;
+-        fill(ptr, first, last);
+-    }
+-
+-    inline void resize_uninitialized(size_type new_size) {
+-        // resize_uninitialized changes the size of the prevector but does not initialize it.
+-        // If size < new_size, the added elements must be initialized explicitly.
+-        if (capacity() < new_size) {
+-            change_capacity(new_size);
+-            _size += new_size - size();
+-            return;
+-        }
+-        if (new_size < size()) {
+-            erase(item_ptr(new_size), end());
+-        } else {
+-            _size += new_size - size();
+-        }
+-    }
+-
+-    iterator erase(iterator pos) {
+-        return erase(pos, pos + 1);
+-    }
+-
+-    iterator erase(iterator first, iterator last) {
+-        // Erase is not allowed to the change the object's capacity. That means
+-        // that when starting with an indirectly allocated prevector with
+-        // size and capacity > N, the result may be a still indirectly allocated
+-        // prevector with size <= N and capacity > N. A shrink_to_fit() call is
+-        // necessary to switch to the (more efficient) directly allocated
+-        // representation (with capacity N and size <= N).
+-        iterator p = first;
+-        char* endp = (char*)&(*end());
+-        if (!std::is_trivially_destructible<T>::value) {
+-            while (p != last) {
+-                (*p).~T();
+-                _size--;
+-                ++p;
+-            }
+-        } else {
+-            _size -= last - p;
+-        }
+-        memmove(&(*first), &(*last), endp - ((char*)(&(*last))));
+-        return first;
+-    }
+-
+-    template<typename... Args>
+-    void emplace_back(Args&&... args) {
+-        size_type new_size = size() + 1;
+-        if (capacity() < new_size) {
+-            change_capacity(new_size + (new_size >> 1));
+-        }
+-        new(item_ptr(size())) T(std::forward<Args>(args)...);
+-        _size++;
+-    }
+-
+-    void push_back(const T& value) {
+-        emplace_back(value);
+-    }
+-
+-    void pop_back() {
+-        erase(end() - 1, end());
+-    }
+-
+-    T& front() {
+-        return *item_ptr(0);
+-    }
+-
+-    const T& front() const {
+-        return *item_ptr(0);
+-    }
+-
+-    T& back() {
+-        return *item_ptr(size() - 1);
+-    }
+-
+-    const T& back() const {
+-        return *item_ptr(size() - 1);
+-    }
+-
+-    void swap(prevector<N, T, Size, Diff>& other) {
+-        std::swap(_union, other._union);
+-        std::swap(_size, other._size);
+-    }
+-
+-    ~prevector() {
+-        if (!std::is_trivially_destructible<T>::value) {
+-            clear();
+-        }
+-        if (!is_direct()) {
+-            free(_union.indirect_contents.indirect);
+-            _union.indirect_contents.indirect = nullptr;
+-        }
+-    }
+-
+-    bool operator==(const prevector<N, T, Size, Diff>& other) const {
+-        if (other.size() != size()) {
+-            return false;
+-        }
+-        const_iterator b1 = begin();
+-        const_iterator b2 = other.begin();
+-        const_iterator e1 = end();
+-        while (b1 != e1) {
+-            if ((*b1) != (*b2)) {
+-                return false;
+-            }
+-            ++b1;
+-            ++b2;
+-        }
+-        return true;
+-    }
+-
+-    bool operator!=(const prevector<N, T, Size, Diff>& other) const {
+-        return !(*this == other);
+-    }
+-
+-    bool operator<(const prevector<N, T, Size, Diff>& other) const {
+-        if (size() < other.size()) {
+-            return true;
+-        }
+-        if (size() > other.size()) {
+-            return false;
+-        }
+-        const_iterator b1 = begin();
+-        const_iterator b2 = other.begin();
+-        const_iterator e1 = end();
+-        while (b1 != e1) {
+-            if ((*b1) < (*b2)) {
+-                return true;
+-            }
+-            if ((*b2) < (*b1)) {
+-                return false;
+-            }
+-            ++b1;
+-            ++b2;
+-        }
+-        return false;
+-    }
+-
+-    size_t allocated_memory() const {
+-        if (is_direct()) {
+-            return 0;
+-        } else {
+-            return ((size_t)(sizeof(T))) * _union.indirect_contents.capacity;
+-        }
+-    }
+-
+-    value_type* data() {
+-        return item_ptr(0);
+-    }
+-
+-    const value_type* data() const {
+-        return item_ptr(0);
+-    }
+-};
++using prevector = std::vector<T>;
+ 
+ #endif // BITCOIN_PREVECTOR_H
 diff -u -r old/src/primitives/transaction.cpp new/src/primitives/transaction.cpp
 --- old/src/primitives/transaction.cpp	1970-01-01 01:00:01.000000000 +0100
 +++ new/src/primitives/transaction.cpp	2022-10-27 23:20:55.643997759 +0200
@@ -729,7 +1456,7 @@ diff -u -r old/src/primitives/transaction.cpp new/src/primitives/transaction.cpp
      assert(MoneyRange(nValueOut));
 diff -u -r old/src/primitives/transaction.h new/src/primitives/transaction.h
 --- old/src/primitives/transaction.h	1970-01-01 01:00:01.000000000 +0100
-+++ new/src/primitives/transaction.h	2022-10-30 23:21:54.527327962 +0100
++++ new/src/primitives/transaction.h	2023-01-16 13:19:23.408526006 +0100
 @@ -233,12 +233,12 @@
          }
          if (!tx.HasWitness()) {
@@ -759,7 +1486,7 @@ diff -u -r old/src/protocol.h new/src/protocol.h
              // In the network serialization format, the encoding (v1 or v2) is determined directly by
 diff -u -r old/src/script/script.h new/src/script/script.h
 --- old/src/script/script.h	1970-01-01 01:00:01.000000000 +0100
-+++ new/src/script/script.h	2022-10-30 23:22:21.598293853 +0100
++++ new/src/script/script.h	2023-01-16 16:33:04.850098673 +0100
 @@ -239,7 +239,7 @@
                          const size_t nMaxNumSize = nDefaultMaxNumSize)
      {
@@ -778,6 +1505,15 @@ diff -u -r old/src/script/script.h new/src/script/script.h
                  }
              }
          }
+@@ -424,7 +424,7 @@
+ public:
+     CScript() { }
+     CScript(const_iterator pbegin, const_iterator pend) : CScriptBase(pbegin, pend) { }
+-    CScript(std::vector<unsigned char>::const_iterator pbegin, std::vector<unsigned char>::const_iterator pend) : CScriptBase(pbegin, pend) { }
++    // CScript(std::vector<unsigned char>::const_iterator pbegin, std::vector<unsigned char>::const_iterator pend) : CScriptBase(pbegin, pend) { }
+     CScript(const unsigned char* pbegin, const unsigned char* pend) : CScriptBase(pbegin, pend) { }
+ 
+     SERIALIZE_METHODS(CScript, obj) { READWRITEAS(CScriptBase, obj); }
 @@ -444,7 +444,7 @@
      CScript& operator<<(opcodetype opcode) LIFETIMEBOUND
      {
@@ -1301,9 +2037,21 @@ diff -u -r old/src/tinyformat.h new/src/tinyformat.h
  
  // Define for C++11 variadic templates which make the code shorter & more
  // general.  If you don't define this, C++11 support is autodetected below.
+diff -u -r old/src/uint256.cpp new/src/uint256.cpp
+--- old/src/uint256.cpp	1970-01-01 01:00:01.000000000 +0100
++++ new/src/uint256.cpp	2023-01-11 00:47:38.296821887 +0100
+@@ -12,7 +12,7 @@
+ template <unsigned int BITS>
+ base_blob<BITS>::base_blob(const std::vector<unsigned char>& vch)
+ {
+-    assert(vch.size() == sizeof(m_data));
++    // assert(vch.size() == sizeof(m_data));
+     memcpy(m_data, vch.data(), sizeof(m_data));
+ }
+ 
 diff -u -r old/src/validation.cpp new/src/validation.cpp
 --- old/src/validation.cpp	1970-01-01 01:00:01.000000000 +0100
-+++ new/src/validation.cpp	2022-10-30 23:28:06.053905786 +0100
++++ new/src/validation.cpp	2023-01-16 16:34:46.499969277 +0100
 @@ -8,26 +8,15 @@
  #include <arith_uint256.h>
  #include <chain.h>
@@ -1376,10 +2124,19 @@ diff -u -r old/src/validation.cpp new/src/validation.cpp
  #define MICRO 0.000001
  #define MILLI 0.001
  
-@@ -107,3128 +72,6 @@
-     "each level includes the checks of the previous levels",
- };
- 
+@@ -98,3139 +63,9 @@
+ static constexpr std::chrono::hours DATABASE_FLUSH_INTERVAL{24};
+ /** Maximum age of our tip for us to be considered current for fee estimation */
+ static constexpr std::chrono::hours MAX_FEE_ESTIMATION_TIP_AGE{3};
+-const std::vector<std::string> CHECKLEVEL_DOC {
+-    "level 0 reads the blocks from disk",
+-    "level 1 verifies block validity",
+-    "level 2 verifies undo data",
+-    "level 3 checks disconnection of tip blocks",
+-    "level 4 tries to reconnect the blocks",
+-    "each level includes the checks of the previous levels",
+-};
+-
 -bool CBlockIndexWorkComparator::operator()(const CBlockIndex *pa, const CBlockIndex *pb) const {
 -    // First sort by most total work, ...
 -    if (pa->nChainWork > pb->nChainWork) return false;
@@ -2451,7 +3208,7 @@ diff -u -r old/src/validation.cpp new/src/validation.cpp
 -    if (!Finalize(args, ws)) return MempoolAcceptResult::Failure(ws.m_state);
 -
 -    GetMainSignals().TransactionAddedToMempool(ptx, m_pool.GetAndIncrementSequence());
--
+ 
 -    return MempoolAcceptResult::Success(std::move(ws.m_replaced_transactions), ws.m_vsize, ws.m_base_fees);
 -}
 -
@@ -2627,7 +3384,7 @@ diff -u -r old/src/validation.cpp new/src/validation.cpp
 -}
 -
 -} // anon namespace
--
+ 
 -MempoolAcceptResult AcceptToMemoryPool(CChainState& active_chainstate, const CTransactionRef& tx,
 -                                       int64_t accept_time, bool bypass_limits, bool test_accept)
 -    EXCLUSIVE_LOCKS_REQUIRED(::cs_main)
@@ -4502,10 +5259,13 @@ diff -u -r old/src/validation.cpp new/src/validation.cpp
 -        }
 -    }
 -}
- 
- static bool CheckBlockHeader(const CBlockHeader& block, BlockValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW = true)
+-
+-static bool CheckBlockHeader(const CBlockHeader& block, BlockValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW = true)
++bool CheckBlockHeader(const CBlockHeader& block, BlockValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW)
  {
-@@ -3252,7 +95,7 @@
+     // Check proof of work matches claimed amount
+     if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits, consensusParams))
+@@ -3252,7 +87,7 @@
          return false;
  
      // Signet only: check block solution
@@ -4514,8 +5274,15 @@ diff -u -r old/src/validation.cpp new/src/validation.cpp
          return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, "bad-signet-blksig", "signet block signature validation failure");
      }
  
-@@ -3299,1799 +142,17 @@
-                                  strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), tx_state.GetDebugMessage()));
+@@ -3295,1803 +130,22 @@
+             // CheckBlock() does context-free validation checks. The only
+             // possible failures are consensus failures.
+             assert(tx_state.GetResult() == TxValidationResult::TX_CONSENSUS);
+-            return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, tx_state.GetRejectReason(),
+-                                 strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), tx_state.GetDebugMessage()));
++            return false;
++            // return state.Invalid(BlockValidationResult::BLOCK_CONSENSUS, tx_state.GetRejectReason(),
++            //                      strprintf("Transaction check failed (tx hash %s) %s", tx->GetHash().ToString(), tx_state.GetDebugMessage()));
          }
      }
 -    unsigned int nSigOps = 0;
@@ -6324,7 +7091,7 @@ diff -u -r old/src/validation.cpp new/src/validation.cpp
 -}
 diff -u -r old/src/validation.h new/src/validation.h
 --- old/src/validation.h	1970-01-01 01:00:01.000000000 +0100
-+++ new/src/validation.h	2022-10-30 23:32:16.038660193 +0100
++++ new/src/validation.h	2023-01-11 12:29:02.533126078 +0100
 @@ -14,27 +14,21 @@
  #include <attributes.h>
  #include <chain.h>
@@ -6375,7 +7142,16 @@ diff -u -r old/src/validation.h new/src/validation.h
  
  /**
   * Closure representing one script verification
-@@ -369,17 +356,6 @@
+@@ -350,6 +337,8 @@
+ 
+ /** Functions for validating blocks and updating the block tree */
+ 
++bool CheckBlockHeader(const CBlockHeader& block, BlockValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW = true);
++
+ /** Context-independent validity checks */
+ bool CheckBlock(const CBlock& block, BlockValidationState& state, const Consensus::Params& consensusParams, bool fCheckPOW = true, bool fCheckMerkleRoot = true);
+ 
+@@ -369,17 +358,6 @@
  std::vector<unsigned char> GenerateCoinbaseCommitment(CBlock& block, const CBlockIndex* pindexPrev, const Consensus::Params& consensusParams);
  
  /** RAII wrapper for VerifyDB: Verify consistency of the block and coin databases */
@@ -6393,7 +7169,7 @@ diff -u -r old/src/validation.h new/src/validation.h
  
  enum DisconnectResult
  {
-@@ -407,31 +383,6 @@
+@@ -407,31 +385,6 @@
   * ultimately falling back on cache misses to the canonical store of UTXOs on
   * disk, `m_dbview`.
   */
@@ -6425,7 +7201,7 @@ diff -u -r old/src/validation.h new/src/validation.h
  
  enum class CoinsCacheSizeState
  {
-@@ -456,311 +407,6 @@
+@@ -456,311 +409,6 @@
   * whereas block information and metadata independent of the current tip is
   * kept in `BlockManager`.
   */
@@ -6737,7 +7513,7 @@ diff -u -r old/src/validation.h new/src/validation.h
  
  /**
   * Provides an interface for creating and interacting with one or two
-@@ -789,229 +435,6 @@
+@@ -789,229 +437,6 @@
   *    IBD process is happening in the background while use of the
   *    active (snapshot) chainstate allows the rest of the system to function.
   */

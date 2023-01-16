@@ -1,7 +1,7 @@
 { pkgs ? import (builtins.fetchTarball {
-    name = "nixos-22.05";
+    name = "nixos-22.11";
     url = "https://github.com/NixOS/nixpkgs/archive/refs/tags/22.05.tar.gz";
-    sha256 = "0d643wp3l77hv2pmg2fi7vyxn4rwy0iyr8djcw1h5x72315ck9ik";
+    sha256 = "sha256:11w3wn2yjhaa5pv20gbfbirvjq6i3m7pqrq2msf0g7cv44vijwgw";
   }) {}
 }:
 
@@ -23,17 +23,17 @@ let
     "arith_uint256"
     "chainparams"
     "chainparamsbase"
-    "consensus/merkle"
-    "consensus/tx_check"
-    "consensus/tx_verify"
+    # "consensus/merkle"
+    # "consensus/tx_check"
+    # "consensus/tx_verify"
     "crypto/sha256"
     "pow"
     "primitives/block"
-    "primitives/transaction"
-    "script/script"
-    "support/cleanse"
+    # "primitives/transaction"
+    # "script/script"
+    # "support/cleanse"
     "uint256"
-    "util/moneystr"
+    # "util/moneystr"
     "util/strencodings"
     "validation"
   ];
@@ -44,7 +44,8 @@ in llvmPackages.stdenv.mkDerivation {
     llvmPackages.libcxx
   ];
   buildPhase = ''
-    $CXX --std=c++17 -O1 -o bitcoin-verify.wasm bitcoin-verify.cpp ${builtins.concatStringsSep " " (map (f: "${bitcoin-wasm}/src/${f}.cpp") required-cpp-files)} -I${bitcoin-wasm}/src -Wl,--no-entry -Wl,--strip-all
+    head -c 80 ${./block.raw} | ${pkgs.xxd}/bin/xxd -i -n header_bytes - header.h
+    $CXX --std=c++17 -Os -o bitcoin-verify.wasm bitcoin-verify.cpp ${builtins.concatStringsSep " " (map (f: "${bitcoin-wasm}/src/${f}.cpp") required-cpp-files)} -I${bitcoin-wasm}/src -Wl,--no-entry -Wl,--strip-all
   '';
   installPhase = ''
     mkdir $out

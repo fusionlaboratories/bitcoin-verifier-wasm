@@ -5,18 +5,16 @@
 #include <streams.h>
 #include <validation.h>
 
-int main () {
-  CBlock block;
-  std::vector<unsigned char> bytes(
-      (std::istreambuf_iterator<char>(std::cin))
-    , std::istreambuf_iterator<char>()
-  );
-  CDataStream stream(bytes, SER_NETWORK, PROTOCOL_VERSION);
-  stream >> block;
+#include "header.h"
 
+int main () {
+  CBlockHeader header;
+  SpanReader stream = SpanReader(SER_NETWORK, PROTOCOL_VERSION, header_bytes);
+  stream >> header;
   BlockValidationState validationState;
   const auto chainParams = CreateMainChainParams();
-  if (CheckBlock(block, validationState, chainParams->GetConsensus(), true, true)) {
+
+  if (CheckBlockHeader(header, validationState, chainParams->GetConsensus(), true)) {
     return 0;
   } else {
     return 1;
